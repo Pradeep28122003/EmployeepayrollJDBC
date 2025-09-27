@@ -1,43 +1,60 @@
  import java.sql.*;
+import java.util.Scanner;
 
+public class Updateemployeepay {
+    public static void Update() throws Exception {
+        String url = "jdbc:mysql://localhost:3306/payroll";
+        String username = "root";
+        String password = "Pradeep#003";
+        String query = "select * from staff";
 
-public class Updateemployeepay{
-public static void Update() throws Exception {
-	String url="jdbc:mysql://localhost:3306/payroll";
-	String username="root";
-	String password="Pradeep#003";
-	String query="select * from staff";
-        try (  
-        		
-        		
-        		Connection con = DriverManager.getConnection(url, username, password)) {
-            try (Statement st = con.createStatement(
-                    ResultSet.TYPE_SCROLL_SENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE)) {
+        try (
+            Connection con = DriverManager.getConnection(url, username, password);
+            Statement st = con.createStatement(
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_UPDATABLE
+            );
+            ResultSet rs = st.executeQuery(query);
+            Scanner sc = new Scanner(System.in)
+        ) {
+           
+            System.out.print("Enter Employee ID: ");
+            int id = sc.nextInt();
+            sc.nextLine(); 
 
-                ResultSet rs = st.executeQuery(query);
+            System.out.print("Enter First Name: ");
+            String fname = sc.nextLine();
 
-                rs.moveToInsertRow();
-                rs.updateString("First_name", "kumar");
-                rs.updateDouble("salary", 10000);
-                rs.updateString("email", "pradeep23@gmail.com");
-                rs.insertRow();
-                System.out.println("Inserted new employee:");
+            System.out.print("Enter Salary: ");
+            double salary = sc.nextDouble();
+            sc.nextLine(); 
 
-                if (rs.first()) {
-                    rs.updateString("email", "kumar23@company.com");
-                    rs.updateRow();
-                    System.out.println("Updated email :");
-                }
+            System.out.print("Enter Email: ");
+            String email = sc.nextLine();
+
+       
+            rs.moveToInsertRow();
+            rs.updateInt(1, id); 
+            rs.updateString("First_name", fname);
+            rs.updateDouble("salary", salary);
+            rs.updateString("email", email);
+            rs.insertRow();
+            System.out.println(" Employee inserted successfully!");
+            if (rs.first()) {
+                System.out.print("Enter new email for first employee: ");
+                String newEmail = sc.nextLine();
+                rs.updateString("email", newEmail);
+                rs.updateRow();
+                System.out.println(" First employee's email updated!");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-}
+    }
 
-  public static void main(String[]args) throws Exception{
-	  Update();
-  
+    public static void main(String[] args) throws Exception {
+        Update();
     }
 }
+

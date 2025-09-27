@@ -1,23 +1,24 @@
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.Statement;
 public class Metadata {
 public static void main(String[]args) throws Exception {
 	String url="jdbc:mysql://localhost:3306/payroll";
 	String username="root";
 	String password= "Pradeep#003";
+	String Query="Select * from staff";
 Connection con =DriverManager.getConnection(url, username, password);
-DatabaseMetaData dbm=con.getMetaData();
-    ResultSet rs = dbm.getColumns(null, null, "staff", null);
+Statement st=con.createStatement();
+ResultSet rt=st.executeQuery(Query);
+ResultSetMetaData rsmd=rt.getMetaData();
+int columncount =rsmd.getColumnCount();
+System.out.println("Number of columns:"+columncount);
 
-    System.out.println(" staff Table");
-    while (rs.next()) {
-        System.out.println(rs.getString("COLUMN_NAME") +
-        		":"+rs.getString("TYPE_NAME")+"");
-    }
-    con.close();
+for(int i=1;i<=columncount;i++) {
+	System.out.println("column"+i+":"+rsmd.getColumnName(i)+"("+rsmd.getColumnTypeName(i)+")");
 }
 
-
-} 
+}
+}
